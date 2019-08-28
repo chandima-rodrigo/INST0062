@@ -1,0 +1,272 @@
+@prefix : <http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5> .
+
+<http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#borders
+:borders rdf:type owl:ObjectProperty ,
+                  owl:SymmetricProperty ;
+         rdfs:domain :Country ;
+         rdfs:range :Country .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#containsState
+:containsState rdf:type owl:ObjectProperty ;
+               owl:inverseOf :isPartOf .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#isCapitalOf
+:isCapitalOf rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf :isLocatedIn ;
+             rdf:type owl:FunctionalProperty .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#isLocatedIn
+:isLocatedIn rdf:type owl:ObjectProperty ,
+                      owl:FunctionalProperty ;
+             rdfs:domain :City ;
+             rdfs:range :Country .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#isPartOf
+:isPartOf rdf:type owl:ObjectProperty ,
+                   owl:FunctionalProperty ;
+          rdfs:domain :State ;
+          rdfs:range :Country .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#nearbyCountry
+:nearbyCountry rdf:type owl:ObjectProperty ;
+               owl:propertyChainAxiom ( :isLocatedIn
+                                        :borders
+                                      ) .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#hasPopulation
+:hasPopulation rdf:type owl:DatatypeProperty ,
+                        owl:FunctionalProperty ;
+               rdfs:domain :Place ;
+               rdfs:range xsd:integer .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#CentralEuropeanCountry
+:CentralEuropeanCountry rdf:type owl:Class ;
+                        rdfs:subClassOf :EuropeanCountry ,
+                                        [ rdf:type owl:Restriction ;
+                                          owl:onProperty :borders ;
+                                          owl:allValuesFrom :EuropeanCountry
+                                        ] .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#City
+:City rdf:type owl:Class ;
+      rdfs:subClassOf :Place ;
+      owl:disjointWith :Country ,
+                       :State ;
+      rdfs:comment "This is the class of all Cities" .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Country
+:Country rdf:type owl:Class ;
+         rdfs:subClassOf :Place ;
+         owl:disjointWith :State ;
+         rdfs:comment "This is the class of all Countries" .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#EuropeNeighborCountry
+:EuropeNeighborCountry rdf:type owl:Class ;
+                       rdfs:subClassOf :NonEuropeanCountry ,
+                                       [ rdf:type owl:Restriction ;
+                                         owl:onProperty :borders ;
+                                         owl:someValuesFrom :EuropeanCountry
+                                       ] .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#EuropeanCountry
+:EuropeanCountry rdf:type owl:Class ;
+                 rdfs:subClassOf :Country .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#GermanCity
+:GermanCity rdf:type owl:Class ;
+            rdfs:subClassOf :City ,
+                            [ rdf:type owl:Restriction ;
+                              owl:onProperty :isLocatedIn ;
+                              owl:hasValue :Germany
+                            ] .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#IslandCountry
+:IslandCountry rdf:type owl:Class ;
+               rdfs:subClassOf :Country ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :borders ;
+                                 owl:qualifiedCardinality "0"^^xsd:nonNegativeInteger ;
+                                 owl:onClass :Country
+                               ] .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#NonEuropeanCountry
+:NonEuropeanCountry rdf:type owl:Class ;
+                    rdfs:subClassOf :Country ,
+                                    [ rdf:type owl:Class ;
+                                      owl:complementOf :EuropeanCountry
+                                    ] .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#NothernCountry
+:NothernCountry rdf:type owl:Class ;
+                rdfs:subClassOf :Country .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#NothernEuropeanCountry
+:NothernEuropeanCountry rdf:type owl:Class ;
+                        owl:equivalentClass [ owl:intersectionOf ( :EuropeanCountry
+                                                                   :NothernCountry
+                                                                 ) ;
+                                              rdf:type owl:Class
+                                            ] .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Place
+:Place rdf:type owl:Class ;
+       rdfs:comment "This is the class of all Places" .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Region
+:Region rdf:type owl:Class ;
+        owl:equivalentClass [ rdf:type owl:Class ;
+                              owl:unionOf ( :Country
+                                            :State
+                                          )
+                            ] .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#State
+:State rdf:type owl:Class ;
+       rdfs:subClassOf :Place ;
+       rdfs:comment "This is the  class of all States." ;
+       rdfs:isDefinedBy "The term is defined as a part of a whole country, such as the different states of the United States of America" .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Amsterdam
+:Amsterdam rdf:type owl:NamedIndividual ,
+                    :City ;
+           :isCapitalOf :TheNetherlands .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Athens
+:Athens rdf:type owl:NamedIndividual ,
+                 :City ;
+        :isCapitalOf :Greece .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Berlin
+:Berlin rdf:type owl:NamedIndividual ,
+                 :GermanCity ;
+        :isCapitalOf :Germany ;
+        :hasPopulation 3500000 .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#California
+:California rdf:type owl:NamedIndividual ,
+                     :State ;
+            :isPartOf :UnitedStatesofAmerica ;
+            :hasPopulation 39557045 .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Delaware
+:Delaware rdf:type owl:NamedIndividual ,
+                   :State ;
+          :isPartOf :UnitedStatesofAmerica ;
+          :hasPopulation 961939 .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#France
+:France rdf:type owl:NamedIndividual ,
+                 :Country ,
+                 :EuropeanCountry .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Germany
+:Germany rdf:type owl:NamedIndividual ,
+                  :EuropeanCountry .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Greece
+:Greece rdf:type owl:NamedIndividual ,
+                 :Country ,
+                 :EuropeanCountry .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Iceland
+:Iceland rdf:type owl:NamedIndividual ,
+                  :EuropeanCountry ,
+                  :IslandCountry ,
+                  :NothernCountry .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#London
+:London rdf:type owl:NamedIndividual ,
+                 :City ;
+        :isCapitalOf :UnitedKingdom .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Nevada
+:Nevada rdf:type owl:NamedIndividual ,
+                 :State ;
+        :isPartOf :UnitedStatesofAmerica ;
+        :hasPopulation 3034392 .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#NewYork
+:NewYork rdf:type owl:NamedIndividual ,
+                  :State ;
+         :isPartOf :UnitedStatesofAmerica ;
+         :hasPopulation 19542209 .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#Paris
+:Paris rdf:type owl:NamedIndividual ,
+                :City .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#TheNetherlands
+:TheNetherlands rdf:type owl:NamedIndividual ,
+                         :Country ,
+                         :EuropeanCountry .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#UnitedKingdom
+:UnitedKingdom rdf:type owl:NamedIndividual ,
+                        :Country ,
+                        :EuropeanCountry .
+
+
+###  http://www.semanticweb.org/system/ontologies/2019/2/untitled-ontology-5#UnitedStatesofAmerica
+:UnitedStatesofAmerica rdf:type owl:NamedIndividual ,
+                                :Country .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
